@@ -18,7 +18,8 @@ RTM 내에서 간단하게 보안장치를 구현할 수 있도록 하는 모드
 
 ## Download
 
-Build artifacts are generated from this repository.
+Unofficial 1.12.2 build: [Download](https://github.com/Chishiya-Teikoku-Daigakuin/ATSAssistMod-1.8.0-rc2-mc1.12.2-unofficial/releases/tag/v1.8.0-rc.2-mc1.12.2-unofficial)
+
 Official ATSAssistMod releases are available from [Kai-Z-JP/ATSAssistMod](https://github.com/Kai-Z-JP/ATSAssistMod/releases).
 
 [//]: # (## How to use)
