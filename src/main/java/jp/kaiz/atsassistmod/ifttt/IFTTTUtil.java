@@ -2,7 +2,6 @@ package jp.kaiz.atsassistmod.ifttt;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
@@ -13,6 +12,8 @@ import java.io.*;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 public class IFTTTUtil {
     private final static Gson GSON = new GsonBuilder().serializeNulls().disableHtmlEscaping().create();
@@ -28,8 +29,9 @@ public class IFTTTUtil {
 
     public static byte[] convertClassSafe(IFTTTContainer ifcb) {
         try {
-            return IFTTT_MAPPER.writeValueAsBytes(ifcb);
-        } catch (JsonProcessingException e) {
+            byte[] bytes = IFTTT_MAPPER.writeValueAsBytes(ifcb);
+            return compress(bytes);
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
@@ -37,11 +39,32 @@ public class IFTTTUtil {
 
     public static IFTTTContainer convertClassSafe(byte[] bytes) {
         try {
-            return IFTTT_MAPPER.readValue(bytes, IFTTTContainer.class);
+            byte[] decompressed = decompress(bytes);
+            return IFTTT_MAPPER.readValue(decompressed, IFTTTContainer.class);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private static byte[] compress(byte[] bytes) throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        try (GZIPOutputStream gzip = new GZIPOutputStream(out)) {
+            gzip.write(bytes);
+        }
+        return out.toByteArray();
+    }
+
+    private static byte[] decompress(byte[] compressed) throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        try (GZIPInputStream gzip = new GZIPInputStream(new ByteArrayInputStream(compressed))) {
+            byte[] buffer = new byte[1024];
+            int len;
+            while ((len = gzip.read(buffer)) > 0) {
+                out.write(buffer, 0, len);
+            }
+        }
+        return out.toByteArray();
     }
 
     private static byte[] convertClass(IFTTTContainer ifcb) {
@@ -72,9 +95,17 @@ public class IFTTTUtil {
         }.getType());
     }
 
+    public static List<byte[]> listToSerializedList(List<IFTTTContainer> ifcbList) {
+        return ifcbList.stream().map(IFTTTUtil::convertClassSafe).filter(Objects::nonNull).collect(Collectors.toList());
+    }
+
     public static List<IFTTTContainer> listFromJson(String json) {
         List<byte[]> iftttJsonList = GSON.fromJson(json, new TypeToken<List<byte[]>>() {
         }.getType());
         return iftttJsonList.stream().map(IFTTTUtil::convertClass).filter(Objects::nonNull).collect(Collectors.toList());
+    }
+
+    public static IFTTTContainer containerFromSerialized(byte[] serialized) {
+        return convertClassSafe(serialized);
     }
 }

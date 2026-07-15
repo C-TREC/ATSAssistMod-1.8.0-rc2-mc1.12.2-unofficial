@@ -1,8 +1,8 @@
 [
   {
     "modid": "atsassistmod",
-    "name": "ATSAssistMod",
-    "description": "ATSAssistMod",
+    "name": "ATSAssistMod Unofficial 1.12.2 Port",
+    "description": "Unofficial modified version of ATSAssistMod v1.8.0-rc.2 for Minecraft 1.12.2.",
     "version": "${version}",
     "mcversion": "${mcversion}",
     "url": "",
@@ -10,7 +10,7 @@
     "authorList": [
       "Kaiz_JP"
     ],
-    "credits": "",
+    "credits": "Original ATSAssistMod by Kaiz_JP. This is an unofficial modified version.",
     "logoFile": "",
     "screenshots": [],
     "dependencies": [

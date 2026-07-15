@@ -1,7 +1,6 @@
 package jp.kaiz.atsassistmod.network;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufUtil;
 import jp.kaiz.atsassistmod.block.tileentity.TileEntityIFTTT;
 import jp.kaiz.atsassistmod.ifttt.IFTTTContainer;
 import jp.kaiz.atsassistmod.ifttt.IFTTTUtil;
@@ -35,7 +34,8 @@ public class PacketIFTTT implements IMessage, IMessageHandler<PacketIFTTT, IMess
         this.pos = buf.readLong();
         this.ifcbIndex = buf.readInt();
         this.type = buf.readInt();
-        this.serialized = ByteBufUtil.getBytes(buf);
+        this.serialized = new byte[buf.readInt()];
+        buf.readBytes(this.serialized);
         this.anyMatch = buf.readBoolean();
     }
 
@@ -44,6 +44,7 @@ public class PacketIFTTT implements IMessage, IMessageHandler<PacketIFTTT, IMess
         buf.writeLong(this.pos);
         buf.writeInt(this.ifcbIndex);
         buf.writeInt(this.type);
+        buf.writeInt(this.serialized.length);
         buf.writeBytes(this.serialized);
         buf.writeBoolean(this.anyMatch);
     }

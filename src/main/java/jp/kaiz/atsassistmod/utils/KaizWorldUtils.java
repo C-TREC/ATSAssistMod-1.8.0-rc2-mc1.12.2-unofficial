@@ -32,4 +32,8 @@ public class KaizWorldUtils {
     public static void setBlock(World world, int x, int y, int z, int id, int meta) {
         BlockUtil.setBlock(world, x, y, z, Block.getBlockById(id), meta, 3);
     }
+
+    public static int getBlockId(World world, int x, int y, int z) {
+        return Block.getIdFromBlock(BlockUtil.getBlock(world, x, y, z));
+    }
 }

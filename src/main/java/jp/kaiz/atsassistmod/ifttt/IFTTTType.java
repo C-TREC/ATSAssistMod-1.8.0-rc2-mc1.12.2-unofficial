@@ -1,6 +1,8 @@
 package jp.kaiz.atsassistmod.ifttt;
 
 import net.minecraft.client.resources.I18n;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class IFTTTType {
 
@@ -42,7 +44,7 @@ public class IFTTTType {
             Speed(122),
             //            TrainState(123),
             TrainDataMap(124),
-//            BlockDataMap(125),
+            TrainDirection(125),
             ;
 
             private final int id;
@@ -147,6 +149,7 @@ public class IFTTTType {
     public interface IFTTTEnumBase {
         int getId();
 
+        @SideOnly(Side.CLIENT)
         default String getName() {
             return I18n.format("ATSAssistMod.IFTTTType." + this.getId());
         }

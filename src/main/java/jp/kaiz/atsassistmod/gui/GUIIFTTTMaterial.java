@@ -8,6 +8,7 @@ import jp.kaiz.atsassistmod.ifttt.IFTTTContainer.This.Minecraft.RedStoneInput.Mo
 import jp.kaiz.atsassistmod.ifttt.IFTTTContainer.This.RTM.SimpleDetectTrain.DetectMode;
 import jp.kaiz.atsassistmod.ifttt.IFTTTType;
 import jp.kaiz.atsassistmod.network.PacketIFTTT;
+import jp.kaiz.atsassistmod.utils.CardinalDirection;
 import jp.kaiz.atsassistmod.utils.ComparisonManager;
 import jp.kaiz.atsassistmod.utils.KaizUtils;
 import jp.ngt.rtm.modelpack.state.DataType;
@@ -117,6 +118,11 @@ public class GUIIFTTTMaterial extends GuiScreen {
                     });
 
                     this.textFieldList.stream().filter(guiTextField -> guiTextField.y == this.height / 2 - 5).forEach(guiTextField -> guiTextField.setVisible(((Enum<?>) ((IFTTTContainer.This.RTM.TrainDataMap) this.ifcb).getComparisonType()).getDeclaringClass() != ComparisonManager.Boolean.class));
+                    break;
+                case 125://TrainDirection
+                    this.fontRenderer.drawString("Train heading",
+                            this.width / 2 - 50, this.height / 2 - 50, 0xffffff);
+                    ((List<GuiButton>) this.buttonList).stream().filter(button -> button.id == 1000).forEach(button -> button.displayString = ((IFTTTContainer.This.RTM.TrainDirection) this.ifcb).getDirection().name());
                     break;
                 case 130://踏切障検
                     this.fontRenderer.drawString(I18n.format("ATSAssistMod.gui.IFTTTMaterial.130.0"),
@@ -295,6 +301,11 @@ public class GUIIFTTTMaterial extends GuiScreen {
                     this.addDownCommon();
                     break;
                 }
+                case 125: {//TrainDirection
+                    this.buttonList.add(new GuiButton(1000, this.width / 2 - 15, this.height / 2 - 30, 60, 20, ""));
+                    this.addDownCommon();
+                    break;
+                }
                 case 130: {//踏切障検
                     this.addGuiTextField(((IFTTTContainer.This.ATSAssist.CrossingObstacleDetection) this.ifcb).getStartCC()[0], this.width / 2 - 50, this.height / 2 - 30, Byte.MAX_VALUE, 30);
                     this.addGuiTextField(((IFTTTContainer.This.ATSAssist.CrossingObstacleDetection) this.ifcb).getStartCC()[1], this.width / 2 - 15, this.height / 2 - 30, Byte.MAX_VALUE, 30);
@@ -413,12 +424,7 @@ public class GUIIFTTTMaterial extends GuiScreen {
     }
 
     public int getTextFieldInt(int number) {
-        int i = 0;
-        try {
-            i = Integer.parseInt(this.getTextFieldText(number));
-        } catch (NumberFormatException ignored) {
-        }
-        return i;
+        return this.parseIntOrZero(this.getTextFieldText(number));
     }
 
     public String getTextFieldText(int number) {
@@ -513,6 +519,9 @@ public class GUIIFTTTMaterial extends GuiScreen {
                 case 124:
                     ifc = new IFTTTContainer.This.RTM.TrainDataMap();
                     break;
+                case 125:
+                    ifc = new IFTTTContainer.This.RTM.TrainDirection();
+                    break;
                 case 130:
                     ifc = new IFTTTContainer.This.ATSAssist.CrossingObstacleDetection();
                     break;
@@ -593,6 +602,14 @@ public class GUIIFTTTMaterial extends GuiScreen {
                                 break;
                         }
                         break;
+                    case 125:
+                        switch (button.id) {
+                            case 1000:
+                                CardinalDirection direction = ((IFTTTContainer.This.RTM.TrainDirection) this.ifcb).getDirection();
+                                ((IFTTTContainer.This.RTM.TrainDirection) this.ifcb).setDirection((CardinalDirection) KaizUtils.getNextEnum(direction));
+                                break;
+                        }
+                        break;
                     case 130:
                         switch (button.id) {
                             case 1000:
@@ -637,7 +654,7 @@ public class GUIIFTTTMaterial extends GuiScreen {
                                 return;
                         }
                         List<int[]> posList = IntStream.range(0, this.textFieldList.size() / 5)
-                                .mapToObj(i -> this.textFieldList.subList(i * 5, Math.min((i + 1) * 5, this.textFieldList.size())).stream().map(GuiTextField::getText).mapToInt(Integer::parseInt).toArray())
+                                .mapToObj(i -> this.textFieldList.subList(i * 5, Math.min((i + 1) * 5, this.textFieldList.size())).stream().map(GuiTextField::getText).mapToInt(this::parseIntOrZero).toArray())
                                 .collect(Collectors.toList());
                         IntStream.range(0, posList.size()).forEach(i -> ((IFTTTContainer.That.Minecraft.SetBlock) this.ifcb).setPos(posList.get(i), i));
                         if (button.id >= 2000 && button.id < 3000) {
@@ -695,9 +712,17 @@ public class GUIIFTTTMaterial extends GuiScreen {
         }
     }
 
+    private int parseIntOrZero(String s) {
+        try {
+            return Integer.parseInt(s);
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
     private int[] getPosFromClipboard() {
         String clipboardText = GuiScreen.getClipboardString();
-        return clipboardText.matches("^-?(\\d+ *,? +){2}-?\\d+$") ? Arrays.stream(clipboardText.split(" *,? +")).mapToInt(Integer::parseInt).toArray() : null;
+        return clipboardText.matches("^-?(\\d+ *,? +){2}-?\\d+$") ? Arrays.stream(clipboardText.split(" *,? +")).mapToInt(this::parseIntOrZero).toArray() : null;
     }
 
     private void changeIFC(IFTTTContainer ifc) {

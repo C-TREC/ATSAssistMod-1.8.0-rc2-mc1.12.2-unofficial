@@ -1,13 +1,12 @@
 package jp.kaiz.atsassistmod.ifttt;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.*;
 import jp.kaiz.atsassistmod.ATSAssistCore;
 import jp.kaiz.atsassistmod.block.tileentity.TileEntityIFTTT;
 import jp.kaiz.atsassistmod.gui.GUIIFTTTMaterial;
 import jp.kaiz.atsassistmod.network.PacketPlaySoundIFTTT;
 import jp.kaiz.atsassistmod.sound.ATSASoundPlayer;
+import jp.kaiz.atsassistmod.utils.CardinalDirection;
 import jp.kaiz.atsassistmod.utils.ComparisonManager;
 import jp.kaiz.atsassistmod.utils.KaizUtils;
 import jp.ngt.ngtlib.block.BlockUtil;
@@ -56,10 +55,13 @@ public abstract class IFTTTContainer implements Serializable {
 
     public abstract IFTTTType.IFTTTEnumBase getType();
 
+    @SideOnly(Side.CLIENT)
     public String getTitle() {
         return this.getType().getName();
     }
 
+
+    @SideOnly(Side.CLIENT)
     public abstract String[] getExplanation();
 
     @SideOnly(Side.CLIENT)
@@ -140,6 +142,7 @@ public abstract class IFTTTContainer implements Serializable {
                 }
 
                 @Override
+                @SideOnly(Side.CLIENT)
                 public String[] getExplanation() {
                     return new String[]{"RSInput" + this.mode.name + (this.mode.needStr ? this.value : "")};
                 }
@@ -218,6 +221,7 @@ public abstract class IFTTTContainer implements Serializable {
                 }
 
                 @Override
+                @SideOnly(Side.CLIENT)
                 public String[] getExplanation() {
                     return new String[]{I18n.format("ATSAssistMod.IFTTT.DetectMode.name") + ": " + I18n.format(this.detectMode.name)};
                 }
@@ -283,6 +287,7 @@ public abstract class IFTTTContainer implements Serializable {
                 }
 
                 @Override
+                @SideOnly(Side.CLIENT)
                 public String[] getExplanation() {
                     return new String[]{"Cars" + this.comparisonType.getName() + this.value};
                 }
@@ -331,6 +336,7 @@ public abstract class IFTTTContainer implements Serializable {
                 }
 
                 @Override
+                @SideOnly(Side.CLIENT)
                 public String[] getExplanation() {
                     return new String[]{"Speed" + this.comparisonType.getName() + this.value};
                 }
@@ -417,6 +423,7 @@ public abstract class IFTTTContainer implements Serializable {
                 }
 
                 @Override
+                @SideOnly(Side.CLIENT)
                 public String getTitle() {
                     return this.getType().getName() + " " + this.dataType.key;
                 }
@@ -427,6 +434,7 @@ public abstract class IFTTTContainer implements Serializable {
                 }
 
                 @Override
+                @SideOnly(Side.CLIENT)
                 public String[] getExplanation() {
                     return new String[]{
                             "Key: " + this.key,
@@ -477,6 +485,45 @@ public abstract class IFTTTContainer implements Serializable {
                     return false;
                 }
             }
+
+            public static class TrainDirection extends This {
+                private static final long serialVersionUID = -2660351192067336593L;
+                private CardinalDirection direction;
+
+                public TrainDirection() {
+                    this.direction = CardinalDirection.NORTH;
+                }
+
+                public CardinalDirection getDirection() {
+                    return direction;
+                }
+
+                public void setDirection(CardinalDirection direction) {
+                    this.direction = direction;
+                }
+
+                @Override
+                public IFTTTType.IFTTTEnumBase getType() {
+                    return IFTTTType.This.RTM.TrainDirection;
+                }
+
+                @Override
+                @SideOnly(Side.CLIENT)
+                public String[] getExplanation() {
+                    return new String[]{"Train heading " + this.direction.name()};
+                }
+
+                @Override
+                @SideOnly(Side.CLIENT)
+                public void setFromGui(GUIIFTTTMaterial gui) {
+
+                }
+
+                @Override
+                public boolean isCondition(TileEntityIFTTT tile, EntityTrainBase train) {
+                    return train != null && this.direction.isInDirection(train);
+                }
+            }
         }
 
         public abstract static class ATSAssist {
@@ -507,6 +554,7 @@ public abstract class IFTTTContainer implements Serializable {
                 }
 
                 @Override
+                @SideOnly(Side.CLIENT)
                 public String[] getExplanation() {
                     return new String[]{
                             String.format("x:%s, y:%s, z:%s", this.startCC[0], this.startCC[1], this.startCC[2]),
@@ -575,6 +623,7 @@ public abstract class IFTTTContainer implements Serializable {
                 }
 
                 @Override
+                @SideOnly(Side.CLIENT)
                 public String[] getExplanation() {
                     return new String[]{I18n.format("ATSAssistMod.gui.IFTTTMaterial.210.1") + ": " + (this.isTrainCarsOutput() ? I18n.format("ATSAssistMod.gui.IFTTTMaterial.210.0") : this.outputLevel)};
                 }
@@ -645,6 +694,7 @@ public abstract class IFTTTContainer implements Serializable {
                 }
 
                 @Override
+                @SideOnly(Side.CLIENT)
                 public String[] getExplanation() {
                     this.createResourceLocation();
                     return this.sound == null ? new String[]{""} : new String[]{this.sound.getResourceDomain(), this.sound.getResourcePath()};
@@ -725,6 +775,7 @@ public abstract class IFTTTContainer implements Serializable {
                 }
 
                 @Override
+                @SideOnly(Side.CLIENT)
                 public String[] getExplanation() {
                     return new String[]{I18n.format("ATSAssistMod.gui.IFTTTMaterial.212.1") + ": " + this.command};
                 }
@@ -782,6 +833,7 @@ public abstract class IFTTTContainer implements Serializable {
                 }
 
                 @Override
+                @SideOnly(Side.CLIENT)
                 public String[] getExplanation() {
                     return new String[]{I18n.format("ATSAssistMod.gui.IFTTTMaterial.213.1") + ": "};
                 }
@@ -856,11 +908,13 @@ public abstract class IFTTTContainer implements Serializable {
                 }
 
                 @Override
+                @SideOnly(Side.CLIENT)
                 public String getTitle() {
                     return this.getType().getName() + " " + this.dataType.key;
                 }
 
                 @Override
+                @SideOnly(Side.CLIENT)
                 public String[] getExplanation() {
                     return new String[]{"Key: " + this.key, "Value: " + this.value};
                 }
@@ -921,6 +975,7 @@ public abstract class IFTTTContainer implements Serializable {
                 }
 
                 @Override
+                @SideOnly(Side.CLIENT)
                 public String[] getExplanation() {
                     return new String[]{"SetSignal:" + this.signal};
                 }
@@ -955,7 +1010,9 @@ public abstract class IFTTTContainer implements Serializable {
                 private transient ScriptEngine scriptEngine;
                 @JsonProperty()
                 private String jsText;
+                @JsonProperty()
                 private boolean error;
+                @JsonProperty()
                 private UUID uuid;
                 private String scriptName = "";
 
@@ -963,6 +1020,13 @@ public abstract class IFTTTContainer implements Serializable {
                     return jsText;
                 }
 
+                @JsonSetter("jsText")
+                public void setJsTextDirect(String jsText) {
+                    this.jsText = jsText;
+                }
+
+                @JsonIgnore
+                @SideOnly(Side.CLIENT)
                 public void setJSText(String jsText) {
                     this.uuid = net.minecraft.client.Minecraft.getMinecraft().player.getUniqueID();
                     this.jsText = jsText;
@@ -985,6 +1049,7 @@ public abstract class IFTTTContainer implements Serializable {
                 }
 
                 @Override
+                @SideOnly(Side.CLIENT)
                 public String[] getExplanation() {
                     return new String[]{this.getScriptName() + " " + (this.error ? "Script Error!" : "")};
                 }

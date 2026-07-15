@@ -20,11 +20,15 @@ plugins {
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'com.github.johnrengelman.shadow'
 
-version = "1.12.2-SNAPSHOT"
+version = "v1.8.0-rc.2"
 group = "jp.kaiz.atsassistmod" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "ATSAssistMod"
+archivesBaseName = "ATSAssistMod-mc1.12.2"
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
 
 minecraft {
     // The mappings can be changed at any time, and must be in the following format.
@@ -96,8 +100,8 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
-    implementation "curse.maven:ngtlib-288989:3003745"
-    implementation "curse.maven:realtrainmod-288988:3061973"
+    implementation "curse.maven:ngtlib-288989:4641592"
+    implementation "curse.maven:realtrainmod-288988:4641603"
 
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
     implementation 'com.fasterxml.jackson.core:jackson-core:2.15.2'
@@ -127,3 +131,17 @@ reobf {
 }
 
 tasks.build.dependsOn tasks.shadowJar
+
+processResources {
+    inputs.property "version", project.version
+    inputs.property "mcversion", "1.12.2"
+
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+        expand 'version': project.version, 'mcversion': "1.12.2"
+    }
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
