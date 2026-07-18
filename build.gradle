@@ -20,7 +20,7 @@ plugins {
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'com.github.johnrengelman.shadow'
 
-version = "v1.8.0-rc.2"
+version = "v1.8.0-rc.3"
 group = "jp.kaiz.atsassistmod" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "ATSAssistMod-mc1.12.2"
 

@@ -2,7 +2,7 @@
   {
     "modid": "atsassistmod",
     "name": "ATSAssistMod Unofficial 1.12.2 Port",
-    "description": "Unofficial modified version of ATSAssistMod v1.8.0-rc.2 for Minecraft 1.12.2.",
+    "description": "Unofficial modified version of ATSAssistMod v1.8.0-rc.3 for Minecraft 1.12.2.",
     "version": "${version}",
     "mcversion": "${mcversion}",
     "url": "https://github.com/Chishiya-Teikoku-Daigakuin/ATSAssistMod-1.8.0-rc2-mc1.12.2-unofficial",
