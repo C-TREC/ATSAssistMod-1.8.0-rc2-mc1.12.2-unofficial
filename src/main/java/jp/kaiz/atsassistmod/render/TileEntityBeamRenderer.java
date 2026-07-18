@@ -13,12 +13,14 @@ import org.lwjgl.opengl.GL11;
 @SideOnly(Side.CLIENT)
 public class TileEntityBeamRenderer extends TileEntitySpecialRenderer {
     private static final ResourceLocation TEXTURE = new ResourceLocation("textures/entity/beacon_beam.png");
+    private static final float BEAM_ALPHA = 0.05F;
 
     public void renderTileEntityAt(TileEntityCustom tileEntity, double x, double y, double z, float p_147500_8_) {
         GL11.glPushMatrix();
 
         if (tileEntity.isRenderBeam()) {
-            GL11.glAlphaFunc(GL11.GL_GREATER, 0.1F);
+            GL11.glPushAttrib(GL11.GL_ENABLE_BIT | GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+            GL11.glAlphaFunc(GL11.GL_GREATER, 0.01F);
             NGTTessellator tessellator = NGTTessellator.instance;
             this.bindTexture(TEXTURE);
 //            GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, 10497.0F);
@@ -31,7 +33,7 @@ public class TileEntityBeamRenderer extends TileEntitySpecialRenderer {
 
             tessellator.setBrightness(255);
             tessellator.startDrawingQuads();
-            tessellator.setColorRGBA_F(0, 190, 246, 32);
+            tessellator.setColorRGBA_F(0.0F, 0.75F, 0.96F, BEAM_ALPHA);
 
             double d7 = 0.5D - 0.15D;
             double d9 = 0.5D + 0.15D;
@@ -62,9 +64,7 @@ public class TileEntityBeamRenderer extends TileEntitySpecialRenderer {
 
             tessellator.draw();
 
-            GL11.glEnable(GL11.GL_LIGHTING);
-            GL11.glEnable(GL11.GL_TEXTURE_2D);
-            GL11.glDepthMask(true);
+            GL11.glPopAttrib();
         }
 
         GL11.glPopMatrix();

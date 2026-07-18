@@ -26,6 +26,7 @@ This modified version keeps the same GPL-3.0 license. See [LICENSE](LICENSE).
 - Updated the Gradle build metadata for `v1.8.0-rc.2` and Minecraft 1.12.2.
 - Updated 1.12.2 dependencies to NGTLib file `4641592` and RealTrainMod file `4641603`.
 - Kept compatibility fallback reading for older IFTTT JSON string NBT data.
+- Added a very faint beacon-like client-side marker for nearby ATSAssist blocks while holding the RTM crowbar.
 
 ## Support note
 
