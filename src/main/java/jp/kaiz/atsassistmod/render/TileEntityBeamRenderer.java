@@ -11,11 +11,16 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class TileEntityBeamRenderer extends TileEntitySpecialRenderer {
+public class TileEntityBeamRenderer extends TileEntitySpecialRenderer<TileEntityCustom> {
     private static final ResourceLocation TEXTURE = new ResourceLocation("textures/entity/beacon_beam.png");
-    private static final float BEAM_ALPHA = 0.05F;
+    private static final float BEAM_ALPHA = 0.08F;
 
-    public void renderTileEntityAt(TileEntityCustom tileEntity, double x, double y, double z, float p_147500_8_) {
+    @Override
+    public void render(TileEntityCustom tileEntity, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+        this.renderBeam(tileEntity, x, y, z);
+    }
+
+    private void renderBeam(TileEntityCustom tileEntity, double x, double y, double z) {
         GL11.glPushMatrix();
 
         if (tileEntity.isRenderBeam()) {
@@ -70,7 +75,13 @@ public class TileEntityBeamRenderer extends TileEntitySpecialRenderer {
         GL11.glPopMatrix();
     }
 
+    public void renderTileEntityAt(TileEntityCustom tileEntity, double x, double y, double z, float partialTicks) {
+        this.renderBeam(tileEntity, x, y, z);
+    }
+
     public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float p_147500_8_) {
-        this.renderTileEntityAt((TileEntityCustom) tileEntity, x, y, z, p_147500_8_);
+        if (tileEntity instanceof TileEntityCustom) {
+            this.renderTileEntityAt((TileEntityCustom) tileEntity, x, y, z, p_147500_8_);
+        }
     }
 }
