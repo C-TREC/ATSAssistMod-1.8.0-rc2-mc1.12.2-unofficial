@@ -14,7 +14,7 @@ buildscript {
 plugins {
     // this version works on gradle 4.9
     // more recent versions of shadow work on more recent versions of gradle
-    id 'com.github.johnrengelman.shadow' version '4.0.4'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
 apply plugin: 'net.minecraftforge.gradle'
