@@ -5,7 +5,7 @@
     "description": "Unofficial modified version of ATSAssistMod v1.8.0-rc.3 for Minecraft 1.12.2.",
     "version": "${version}",
     "mcversion": "${mcversion}",
-    "url": "https://github.com/Chishiya-Teikoku-Daigakuin/ATSAssistMod-1.8.0-rc2-mc1.12.2-unofficial",
+    "url": "https://github.com/C-TREC/ATSAssistMod-1.8.0-rc2-mc1.12.2-unofficial",
     "updateUrl": "",
     "authorList": [
       "Kaiz_JP"

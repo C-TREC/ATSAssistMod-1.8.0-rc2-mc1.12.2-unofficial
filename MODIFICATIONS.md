@@ -7,7 +7,7 @@ It is not affiliated with, endorsed by, or supported by the original author.
 
 ## Upstream
 
-- Modified source: https://github.com/Chishiya-Teikoku-Daigakuin/ATSAssistMod-1.8.0-rc2-mc1.12.2-unofficial
+- Modified source: https://github.com/C-TREC/ATSAssistMod-1.8.0-rc2-mc1.12.2-unofficial
 - Original project: https://github.com/Kai-Z-JP/ATSAssistMod
 - Original author: Kaiz_JP
 - Base branch used for the Minecraft 1.12.2 port: `1.12.2`
